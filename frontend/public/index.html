@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Giternance</title>
+  <link rel="stylesheet" href="/dist/assets/style.css">
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="text-center py-8 border-b border-slate-800">
+    <h1 class="text-4xl font-bold">📘 Giternance</h1>
+    <p class="text-slate-400 mt-2">
+      Git repository synchronizer
+    </p>
+  </header>
+
+  <!-- Main -->
+  <main class="w-full max-w-[1500px] mx-auto grid grid-cols-1 md:grid-cols-[350px_1fr_350px] gap-6 p-6">
+
+    <!-- Form -->
+    <section class="bg-slate-950 rounded-xl p-6 shadow">
+      <h2 class="text-xl font-semibold mb-4">Options</h2>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-slate-400 mb-1">
+            Source repository
+          </label>
+          <input
+            id="sourceRepo"
+            type="text"
+            placeholder="https://github.com/user/source.git"
+            class="w-full rounded-md bg-slate-900 border border-slate-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm text-slate-400 mb-1">
+            Target repository
+          </label>
+          <input
+            id="targetRepo"
+            type="text"
+            placeholder="https://github.com/user/target.git"
+            class="w-full rounded-md bg-slate-900 border border-slate-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
+          />
+        </div>
+
+        <button
+          id="sync"
+          class="
+            bg-accent
+            border border-blue-400/40
+            hover:border-blue-300 hover:bg-blue-600
+            transition
+            rounded-md
+            px-4 py-1
+            text-sm font-semibold
+            shadow-sm hover:shadow-md
+            focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-900
+            mx-auto
+            block"
+        >
+          <span id="syncText">Synchronize</span>
+          <svg id="spinner" class="w-4 h-4 text-white animate-spin hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"></path>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Calendar -->
+    <section class="bg-slate-950 rounded-xl p-4 shadow">
+      <div id="calendar"></div>
+    </section>
+
+    <!-- Logs -->
+    <section class="bg-slate-950 rounded-xl p-6 shadow">
+      <div id="logs"></div>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script type="module" src="/dist/public/bundle.js"></script>
+</body>
+</html>

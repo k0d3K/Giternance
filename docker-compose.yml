@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: giternance-backend
+    networks:
+      - giternance
+    volumes:
+    - ./logs:/app/logs
+    restart: "on-failure"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: giternance-frontend
+    depends_on:
+      - backend
+    networks:
+      - giternance
+    restart: "on-failure"
+
+  nginx:
+    build: ./nginx
+    container_name: giternance-nginx
+    ports:
+      - "8888:443"  # Using 8888 juste in case you are not allowed to bind 443.
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - giternance
+    restart: "on-failure"
+
+networks:
+  giternance:
+    name: giternance
+    driver: bridge
+
