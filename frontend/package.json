@@ -6,7 +6,7 @@
   "scripts": {
     "lint:ts": "eslint . --ext .ts --max-warnings=0",
     "format:check": "npm run lint:ts && madge --circular --extensions ts ./frontend/src",
-    "build:css": "npx @tailwindcss/cli -o ./dist/assets/style.css --minify",
+    "build:css": "npx @tailwindcss/cli -i ./assets/style.css -o ./dist/assets/style.css --minify",
     "build:ts_server": "tsc -p ./frontend/tsconfig.build.json",
     "build:ts_client": "tsc -p ./frontend/tsconfig.json --noEmit && npx esbuild ./frontend/src/main.ts --bundle --minify --sourcemap --outfile=dist/public/bundle.js --platform=browser --target=es2022",
     "build": "npm run build:css && npm run build:ts_server && npm run build:ts_client",
@@ -16,7 +16,10 @@
     "fastify": "5.6.1",
     "@fastify/static": "8.2.0",
     "@types/node": "24.7.0",
-    "tailwindcss": "4.1.14"
+    "tailwindcss": "4.1.14",
+    "@fullcalendar/core": "6.1.20",
+    "@fullcalendar/timegrid": "6.1.20",
+    "@fullcalendar/interaction": "6.1.20"
   },
   "devDependencies": {
     "esbuild": "0.26.0",

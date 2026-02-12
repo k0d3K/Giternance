@@ -1,1 +1,3 @@
-console.log(`Frontend ready !`);
+import { setupCalendar } from "./calendar";
+
+setupCalendar();

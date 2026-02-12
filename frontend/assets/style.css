@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+.fc-scroller {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.fc-scroller::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
+
+/* Day headers */
+.fc .fc-col-header-cell-cushion {
+  font-size: 0.75rem;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  font-size: 0.75rem;
+}
+
+.fc-event {
+  background-color: #5191e1; /* bright blue */
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+  transition: transform 0.1s ease, background-color 0.2s ease;
+  position: relative; /* needed for trash icon inside */
+}
+
+.fc-event:hover {
+  transform: scale(1.02);
+  background-color: #3b82f6; /* slightly brighter */
+}
