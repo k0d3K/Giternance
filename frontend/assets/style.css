@@ -18,16 +18,16 @@
 }
 
 .fc-event {
-  background-color: #5191e1; /* bright blue */
+  background-color: #179cb9;
   color: white;
   border-radius: 0.5rem;
   padding: 0.25rem;
   font-size: 0.75rem;
   transition: transform 0.1s ease, background-color 0.2s ease;
-  position: relative; /* needed for trash icon inside */
+  position: relative;
 }
 
 .fc-event:hover {
   transform: scale(1.02);
-  background-color: #3b82f6; /* slightly brighter */
+  background-color: #1593af;
 }
