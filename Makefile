@@ -6,6 +6,7 @@ up:
 	@mkdir -p ./logs
 	@chown $$(id -u):$$(id -g) ./logs
 	@docker-compose up -d
+	@echo "Access the website: https://$(hostname -I | awk '{print $1}'):8888" or https://localhost:8888
 
 # Stop services
 down:
