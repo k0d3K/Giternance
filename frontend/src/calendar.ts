@@ -1,13 +1,15 @@
-import { Calendar, DateSelectArg, EventDropArg, EventChangeArg, EventClickArg } from '@fullcalendar/core';
+import { Calendar, DateSelectArg, EventDropArg, EventChangeArg, EventClickArg, EventApi } from '@fullcalendar/core';
 
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+
+let CALENDAR: Calendar | null = null;
 
 function setupCalendar(): void {
 	const elem = document.getElementById('calendar');
 	if (!elem)
 		return;
-	const calendar = new Calendar(elem, {
+	CALENDAR = new Calendar(elem, {
 		plugins: [timeGridPlugin, interactionPlugin],
 		initialView: 'timeGridWeek',
 
@@ -31,13 +33,13 @@ function setupCalendar(): void {
 
 		select: function(info: DateSelectArg): void {
 			// triggered when user selects a time slot
-			calendar.addEvent({
+			CALENDAR?.addEvent({
 				title: '',
 				start: info.start,
 				end: info.end,
 				allDay: info.allDay
 			});
-			calendar.unselect();
+			CALENDAR?.unselect();
 		},
 
 		eventDrop: function(info: EventDropArg): void {
@@ -55,7 +57,33 @@ function setupCalendar(): void {
 		},
 	});
 
-	calendar.render();
+	CALENDAR.render();
 }
 
-export { setupCalendar };
+interface Slot {
+	start: Date,
+	end: Date
+}
+
+function getCalendar(): Slot[] {
+	if (!CALENDAR)
+		return [];
+
+	const events: EventApi[] =  CALENDAR.getEvents();
+	const calendar: Slot[] = [];
+
+	for (const event of events) {
+		if (!event.start || !event.start)
+			continue;
+		const slot: Slot = {
+			start: event.start,
+			end: event.start
+		};
+		calendar.push(slot);
+	}
+
+	return calendar;
+}
+
+export { Slot };
+export { setupCalendar, getCalendar };
