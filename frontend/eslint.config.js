@@ -55,7 +55,7 @@ export default [
 			},
 			{
 				selector: ["variable"],
-				modifiers: ["const", "global"],
+				modifiers: ["global"],
 				format: ["UPPER_CASE"],
 				leadingUnderscore: "forbid",
 				trailingUnderscore: "forbid",
