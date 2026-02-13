@@ -26,6 +26,9 @@ function setupCalendar(): void {
 		selectMirror: true,				// shows a temporary event while dragging
 		weekends: false,
 
+		eventOverlap: false,
+		selectOverlap: false,
+
 		select: function(info: DateSelectArg): void {
 			// triggered when user selects a time slot
 			calendar.addEvent({
