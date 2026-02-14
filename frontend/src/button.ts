@@ -17,7 +17,7 @@ async function askForSync(): Promise<void> {
 		return;
 	}
 	if (!isValidRepoLink(repos.dst)) {
-		inform("Invalid destination repository");
+		inform("Invalid target repository");
 		return;
 	}
 	if (!await sendRepoLinks(repos))
@@ -31,7 +31,6 @@ async function askForSync(): Promise<void> {
 		return;
 	if (!await enableSync())
 		return;
-	// change the button status and action
 	const btn = document.getElementById('sync');
 	if (!(btn instanceof HTMLButtonElement))
 		return;
