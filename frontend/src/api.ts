@@ -22,7 +22,7 @@ async function sendRequestToBack<T>(method: METHODS, endpoint: string, content='
 	}
 	try {
 		const text = await res.text();
-		if (!text)
+		if (!text || text === 'null')
 			return true;
 		const reply: T = JSON.parse(text);
 		return reply;

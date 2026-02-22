@@ -4,28 +4,42 @@ from git import Repo, GitCommandError
 from typing import List
 from .models import Slot, RepoLinks
 from .data import getCalendar, getLinks
+from .errors import BackendError
+from .logs import logInfo
 
 import os
 os.environ["SSH_AUTH_SOCK"] = "/ssh-agent"
 
-class Synchronizer:
+class _Synchronizer:
 	def __init__(self):
 		self.active: bool = False
 
 	def start(self):
+		"""
+		Resume
+		----------
+		Start syncrhonisation from local files configuration
+		
+		Raises
+		----------
+			BackendError: If a misconfiguration happens.
+			OtherError: If something unexpected happens.
+		"""
 		calendar: List[Slot] = getCalendar()
 		if len(calendar) == 0:
-			raise  RuntimeError(f"No calendar.")
+			raise BackendError(f"No slot in the given calendar")
 		repos: RepoLinks = getLinks()
-		if not cloneRepos(repos):
-			raise  RuntimeError(f"Invalid repos.")
-		return 0
+		clone_or_update_repo(repos.src, "./repos/src")
+		clone_or_update_repo(repos.dst, "./repos/dst")
 
-	def stop(self) -> bool:
+	def stop(self):
 		self.active_connection = None
 
 	def isEnabled(self) -> bool:
 		return self.active
+
+synchronizer = _Synchronizer()
+del _Synchronizer
 
 def clone_or_update_repo(repo_url: str, target_dir: str):
 	"""
@@ -36,26 +50,17 @@ def clone_or_update_repo(repo_url: str, target_dir: str):
 			repo = Repo(target_dir)
 			origin_url = next((r.url for r in repo.remotes), None)
 			if origin_url != repo_url:
-				print(f"Remote URL mismatch for {target_dir}: {origin_url} != {repo_url}")
-				print(f"Deleting {target_dir} and re-cloning...")
+				logInfo(f"Remote URL mismatch for {target_dir}: {origin_url} != {repo_url}")
+				logInfo(f"Deleting {target_dir} and re-cloning...")
 				shutil.rmtree(target_dir)
 			else:
-				print(f"Repository at {target_dir} already matches {repo_url}")
+				logInfo(f"Repository at {target_dir} already matches {repo_url}")
 				return repo
 		except GitCommandError:
-			print(f"Existing folder at {target_dir} is not a git repo. Replacing...")
+			logInfo(f"Existing folder at {target_dir} is not a git repo. Replacing...")
 			shutil.rmtree(target_dir)
 
-	print(f"Cloning {repo_url} into {target_dir} ...")
+	logInfo(f"Cloning {repo_url} into {target_dir} ...")
 	repo = Repo.clone_from(repo_url, target_dir, env={"GIT_SSH_COMMAND": "ssh -o StrictHostKeyChecking=no"})
-	print("Clone completed.")
+	logInfo("Clone completed.")
 	return repo
-	
-def cloneRepos(repos: RepoLinks) -> bool:
-	try:
-		clone_or_update_repo(repos.src, "./repos/src")
-		clone_or_update_repo(repos.dst, "./repos/dst")
-		return True
-	except Exception as e:
-		print("Error cloning repos:", e)
-		return False

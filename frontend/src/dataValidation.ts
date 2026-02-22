@@ -23,7 +23,6 @@ function isValidRepoLink(link: string): boolean {
 }
 
 function isValidCalendar(calendar: Slot[]): boolean {
-	console.log(calendar);
 	return calendar.length > 0;
 }
 

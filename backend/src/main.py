@@ -1,9 +1,12 @@
-from fastapi import FastAPI, APIRouter, Body, Response, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, APIRouter, Body, WebSocket, WebSocketDisconnect
+from fastapi.responses import JSONResponse
 from typing import List
 from .models import Slot, RepoLinks
 from .data import getCalendar, storeCalendar, getLinks, storeLinks
-from .logs import ConnectionManager
-from .synchronizer import Synchronizer
+from .logs import connectionManager
+from .synchronizer import synchronizer
+from .errors import BackendError, logException
+import asyncio
 
 app = FastAPI()
 
@@ -22,7 +25,7 @@ def get_repos():
 def post_repos(repos: RepoLinks):
 	# parse data
 	storeLinks(repos)
-	return Response(content=None)
+	return JSONResponse(content=None)
 
 # Calendar endpoints
 @router.get("/calendar")
@@ -33,11 +36,9 @@ def get_calendar():
 def post_calendar(calendar: List[Slot]):
 	# parse data
 	storeCalendar(calendar)
-	return Response(content=None)
+	return JSONResponse(content=None)
 
 # Sync status endpoints
-synchronizer = Synchronizer()
-
 @router.post("/sync")
 def set_status(status: bool = Body(..., embed=False)):
 	try:
@@ -45,9 +46,12 @@ def set_status(status: bool = Body(..., embed=False)):
 			synchronizer.start()
 		elif status == False:
 			synchronizer.stop()
-		return Response(content=None)
+		return JSONResponse(content=None)
+	except BackendError as e:
+		return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
 	except Exception as e:
-		return Response(content=f"Error: {str(e)}", status_code=500)
+		logException(e, context="Unexpected error in /sync")
+		return JSONResponse(content={"success": False, "error": "Internal server error"}, status_code=500)
 
 @router.get("/sync")
 def get_status():
@@ -59,18 +63,16 @@ app.include_router(router)
 # WebSocket Manager
 # =========================
 
-manager = ConnectionManager()
-
 @app.websocket("/ws/logs")
 async def websocket_logs(websocket: WebSocket):
-	if manager.is_connected():
+	if connectionManager.isConnected():
 		await websocket.close(code=1008)
 		return
 
-	await manager.connect(websocket)
+	await connectionManager.connect(websocket)
 
 	try:
 		while True:
-			await websocket.receive_text()
+			await asyncio.sleep(10)
 	except WebSocketDisconnect:
-		manager.disconnect()
+		connectionManager.disconnect()

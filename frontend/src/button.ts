@@ -20,13 +20,13 @@ async function askForSync(): Promise<void> {
 		inform("Invalid target repository");
 		return;
 	}
-	if (!await sendRepoLinks(repos))
-		return;
 	const calendar = getCalendar();
 	if (!isValidCalendar(calendar)) {
 		inform("Please select at least one slot");
 		return;
 	}
+	if (!await sendRepoLinks(repos))
+		return;
 	if (!await sendCalendar(calendar))
 		return;
 	if (!await enableSync())

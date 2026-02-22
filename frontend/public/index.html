@@ -21,7 +21,7 @@
   </header>
 
   <!-- Main -->
-  <main class="flex-1 w-full max-w-[1700px] mx-auto grid grid-cols-1 xl:grid-cols-[400px_1fr_400px] gap-6 p-4">
+  <main class="flex-1 w-full max-w-[1700px] mx-auto grid grid-cols-1 xl:grid-cols-[400px_1fr_600px] gap-6 p-4">
 
     <!-- Form -->
     <section class="bg-slate-950 rounded-xl p-6 shadow flex flex-col">
@@ -79,15 +79,13 @@
 
     <!-- Calendar -->
     <section class="bg-slate-950 rounded-xl p-4 shadow flex flex-col">
-      <div id="calendar" class="flex flex-col h-[600px] overflow-y-auto"> </div>
-    </div>
+      <div id="calendar" class="flex flex-col h-[600px] overflow-y-auto hidden-scrollbar"></div>
     </section>
 
     <!-- Logs -->
     <section class="bg-slate-950 rounded-xl p-6 shadow flex flex-col">
-      <div id="logs">
-        <h2 class="text-xl font-semibold mb-4">Logs</h2>
-      </div>
+      <h2 class="text-xl font-semibold mb-4">Logs</h2>
+      <div id="logs" class="flex flex-col h-[600px] overflow-y-auto hidden-scrollbar"></div>
     </section>
   </main>
 
