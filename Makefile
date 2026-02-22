@@ -3,8 +3,18 @@ IP:=$$(hostname -I | awk '{print $$1}')
 # Default target
 all: up
 
+# SSH agent setup
+ssh-agent-setup:
+	@test -n "$$SSH_AUTH_SOCK" || eval $$(ssh-agent -s); \
+	KEY_PATH=$$(ls -1 ~/.ssh/id_* 2>/dev/null | grep -v '\.pub' | head -n1); \
+	if [ -z "$$KEY_PATH" ]; then \
+		echo "No private SSH key found in ~/.ssh"; \
+		exit 1; \
+	fi; \
+	ssh-add -l | grep -q "$$(ssh-keygen -lf $$KEY_PATH | awk '{print $$3}')" || ssh-add -t 7h "$$KEY_PATH"; \
+
 # Start the container
-up:
+up: ssh-agent-setup
 	@mkdir -p ./logs
 	@chown $$(id -u):$$(id -g) ./logs
 	@docker compose up -d

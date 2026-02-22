@@ -45,11 +45,11 @@ async function sendCalendar(calendar: Slot[]): Promise<boolean> {
 }
 
 async function enableSync(): Promise<boolean> {
-	return await sendRequestToBack(METHODS.POST, '/api/status', 'true') === true;
+	return await sendRequestToBack(METHODS.POST, '/api/sync', 'true') === true;
 }
 
 async function disableSync(): Promise<boolean> {
-	return await sendRequestToBack(METHODS.POST, '/api/status', 'false') === true;
+	return await sendRequestToBack(METHODS.POST, '/api/sync', 'false') === true;
 }
 
 /**
