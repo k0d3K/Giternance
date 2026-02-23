@@ -4,7 +4,7 @@ from typing import List
 from .models import Slot, RepoLinks
 from .data import getCalendar, storeCalendar, getLinks, storeLinks
 from .logs import connectionManager
-from .synchronizer import synchronizer
+from .RepoManager import repoManager
 from .errors import BackendError, logException
 import asyncio
 
@@ -43,9 +43,9 @@ def post_calendar(calendar: List[Slot]):
 def set_status(status: bool = Body(..., embed=False)):
 	try:
 		if status == True:
-			synchronizer.start()
+			repoManager.start()
 		elif status == False:
-			synchronizer.stop()
+			repoManager.stop()
 		return JSONResponse(content=None)
 	except BackendError as e:
 		return JSONResponse(content={"success": False, "error": str(e)}, status_code=400)
@@ -55,7 +55,7 @@ def set_status(status: bool = Body(..., embed=False)):
 
 @router.get("/sync")
 def get_status():
-	return synchronizer.isEnabled()
+	return repoManager.isEnabled()
 
 app.include_router(router)
 
