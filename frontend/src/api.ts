@@ -1,4 +1,4 @@
-import { Slot } from "./calendar";
+import { Slot } from "./Slot";
 import { inform, RepoLinks } from "./intercat";
 
 enum METHODS {
@@ -6,7 +6,16 @@ enum METHODS {
 	POST = 'POST'
 };
 
+/**
+ * @todo Better management here
+ */
 function createRequestContent(method: METHODS, content=''): RequestInit {
+	if (method === METHODS.GET) {
+		return {
+			method: method,
+			headers: { "Content-Type": "application/json" },
+		};
+	}
 	return {
 		method: method,
 		headers: { "Content-Type": "application/json" },
@@ -67,7 +76,7 @@ async function askRepoLinks(): Promise<RepoLinks> {
 	return reply;
 }
 
-async function askCalendar(calendar: Slot[]): Promise<Slot[]> {
+async function askCalendar(): Promise<Slot[]> {
 	const reply = await sendRequestToBack<Slot[]>(METHODS.GET, '/api/calendar');
 	if (typeof reply === 'boolean') {
 		return [];

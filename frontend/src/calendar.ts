@@ -2,6 +2,8 @@ import { Calendar, DateSelectArg, EventDropArg, EventChangeArg, EventClickArg, E
 
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { Slot } from './Slot';
+import { askCalendar } from './api';
 
 let CALENDAR: Calendar | null = null;
 
@@ -43,26 +45,23 @@ function setupCalendar(): void {
 		},
 
 		eventDrop: function(info: EventDropArg): void {
-			// triggered when user drags an event to a new time
 			console.log('Event moved to:', info.event.start, info.event.end);
-			// Here you can call your Fastify API to save changes
+			// send to back if sync is activ
 		},
 
 		eventResize: function(info: EventChangeArg): void {
 			console.log('Event resized to:', info.event.start, info.event.end);
+			// send to back if sync is activ
 		},
 
 		eventClick: function(info: EventClickArg): void {
 			info.event.remove();
+			// send to back if sync is activ
 		},
 	});
 
+	getSavedEvents();
 	CALENDAR.render();
-}
-
-interface Slot {
-	start: Date,
-	end: Date
 }
 
 function getCalendar(): Slot[] {
@@ -83,6 +82,20 @@ function getCalendar(): Slot[] {
 	}
 
 	return calendar;
+}
+
+async function getSavedEvents(): Promise<void> {
+	if (!CALENDAR)
+		return ;
+
+	const slots: Slot[] = await askCalendar();
+	for (const slot of slots) {
+		CALENDAR.addEvent({
+			title: '',
+			start: slot.start,
+			end: slot.end
+		});
+	}
 }
 
 export { Slot };

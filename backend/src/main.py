@@ -40,7 +40,7 @@ def post_calendar(calendar: List[Slot]):
 
 # Sync status endpoints
 @router.post("/sync")
-def set_status(status: bool = Body(..., embed=False)):
+async def set_status(status: bool = Body(..., embed=False)):
 	try:
 		if status == True:
 			repoManager.start()

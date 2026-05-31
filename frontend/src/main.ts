@@ -1,7 +1,7 @@
-import { setupButtonSync } from "./button";
+import { setupOptions } from "./options";
 import { setupCalendar } from "./calendar";
 import { setupLogs } from "./logs";
 
 setupCalendar();
-setupButtonSync();
+setupOptions();
 setupLogs();
